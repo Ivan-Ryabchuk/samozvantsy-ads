@@ -15,6 +15,7 @@
             --neon-green: #00ff41;
             --neon-red: #ff0055;
             --neon-purple: #b829ea;
+            --neon-orange: #ff6600;
             --bg-void: #010101;
             --bg-card: #080a0f;
             --border-glow: #1a1f2e;
@@ -329,6 +330,30 @@
         }
 
         /* Цветовые варианты кнопок */
+        .btn-games {
+            border-color: rgba(255, 102, 0, 0.4);
+        }
+        .btn-games .btn-icon {
+            background: rgba(255, 102, 0, 0.1);
+            color: var(--neon-orange);
+        }
+        .btn-games:hover {
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 40px rgba(255, 102, 0, 0.3), inset 0 0 40px rgba(255, 102, 0, 0.05);
+        }
+
+        .btn-apk {
+            border-color: rgba(0, 255, 65, 0.4);
+        }
+        .btn-apk .btn-icon {
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--neon-green);
+        }
+        .btn-apk:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3), inset 0 0 40px rgba(0, 255, 65, 0.05);
+        }
+
         .btn-telegram {
             border-color: rgba(0, 240, 255, 0.4);
         }
@@ -363,18 +388,6 @@
         .btn-max:hover {
             border-color: var(--neon-yellow);
             box-shadow: 0 0 40px rgba(252, 238, 10, 0.3), inset 0 0 40px rgba(252, 238, 10, 0.05);
-        }
-
-        .btn-apk {
-            border-color: rgba(0, 255, 65, 0.4);
-        }
-        .btn-apk .btn-icon {
-            background: rgba(0, 255, 65, 0.1);
-            color: var(--neon-green);
-        }
-        .btn-apk:hover {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3), inset 0 0 40px rgba(0, 255, 65, 0.05);
         }
 
         .btn-ads {
@@ -439,45 +452,6 @@
             justify-content: center;
             flex-direction: column;
             gap: 8px;
-        }
-
-        /* ============================================
-           СТАТИСТИКА
-           ============================================ */
-        .stats-row {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-            max-width: 550px;
-            flex-wrap: wrap;
-        }
-        .stat-card {
-            flex: 1;
-            min-width: 100px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glow);
-            border-radius: 6px;
-            padding: 15px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .stat-card:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
-        }
-        .stat-num {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 15px var(--neon-yellow);
-            font-family: var(--font-display);
-        }
-        .stat-label {
-            font-size: 0.6rem;
-            letter-spacing: 3px;
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-            margin-top: 4px;
         }
 
         /* ============================================
@@ -641,15 +615,6 @@
             .btn-arrow {
                 font-size: 1.2rem;
             }
-            .stats-row {
-                gap: 8px;
-            }
-            .stat-card {
-                padding: 10px;
-            }
-            .stat-num {
-                font-size: 1.4rem;
-            }
             #threeContainer {
                 display: none;
             }
@@ -688,24 +653,18 @@
             </div>
         </div>
 
-        <!-- Статистика -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-num" id="statDownloads">1 337</div>
-                <div class="stat-label">Downloads</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num" id="statSubs">2 077</div>
-                <div class="stat-label">Followers</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num" id="statUptime">420h</div>
-                <div class="stat-label">Uptime</div>
-            </div>
-        </div>
-
         <!-- Основные кнопки -->
         <div class="btn-grid">
+
+            <!-- НАШИ ИГРЫ -->
+            <a href="#" class="btn-main btn-games" onclick="return false;" title="Скоро...">
+                <div class="btn-icon">🎮</div>
+                <div class="btn-label">
+                    <span class="main-text">НАШИ ИГРЫ</span>
+                    <span class="sub-text">Скоро здесь будет полный каталог</span>
+                </div>
+                <span class="btn-arrow">▶</span>
+            </a>
 
             <!-- Скачать APK -->
             <a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0"
@@ -797,7 +756,7 @@ target="_blank" class="btn-main btn-policy">
     <div class="ticker-text">
         > APK v1.0 НА GITHUB // > TG: @RyabchukDev // > VK: vk.ru/ryabchukdev //
         > MAX: КАНАЛ АКТИВЕН // > APP-ADS.TXT ЗАГРУЖЕН // > ADS.TXT ЗАГРУЖЕН //
-        > ПОЛИТИКА ДОСТУПНА // > НАЖМИ ~ ДЛЯ КОНСОЛИ
+        > ПОЛИТИКА ДОСТУПНА // > НАШИ ИГРЫ: СКОРО // > НАЖМИ ~ ДЛЯ КОНСОЛИ
     </div>
 </div>
 
@@ -951,51 +910,62 @@ target="_blank" class="btn-main btn-policy">
     const cmds = {
         help: () => {
             cPrint('> КОМАНДЫ:', '#00f0ff');
-            ['help', 'status', 'download', 'contact', 'vk', 'tg', 'max', 'appads', 'ads', 'privacy', 'whoami',
-                'clear', 'exit'
+            ['help', 'status', 'games', 'download', 'contact', 'vk', 'tg', 'max', 'appads', 'ads', 'privacy',
+                'whoami', 'clear', 'exit'
             ].forEach(c => cPrint(`  ${c}`, '#888'));
         },
-        status: () => {
-            cPrint('> SYSTEM: ONLINE // ALL NODES ACTIVE');
-        },
+        status: () => cPrint('> SYSTEM: ONLINE // ALL NODES ACTIVE'),
+        games: () => cPrint('> НАШИ ИГРЫ: СКОРО БУДЕТ ПОЛНЫЙ КАТАЛОГ // STAY TUNED', '#ff6600'),
         download: () => {
             cPrint('> GITHUB APK v1.0', '#fcee0a');
-            setTimeout(
-                () => window.open(
-                    'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0', '_blank'),
-                400);
+            setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0', '_blank'), 400);
         },
-        contact: () => { cPrint('> TG: @RyabchukDev | VK: vk.ru/ryabchukdev | MAX: канал активен',
-            '#fcee0a'); },
-        vk: () => { cPrint('> VK'); setTimeout(() => window.open('https://vk.ru/ryabchukdev', '_blank'),
-            400); },
-        tg: () => { cPrint('> TG'); setTimeout(() => window.open('https://t.me/RyabchukDev', '_blank'),
-            400); },
-        max: () => { cPrint('> MAX'); setTimeout(() => window.open(
-                'https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI', '_blank'), 400); },
-        appads: () => { cPrint('> APP-ADS.TXT'); setTimeout(() => window.open(
-                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/app-ads.txt', '_blank'),
-            400); },
-        ads: () => { cPrint('> ADS.TXT'); setTimeout(() => window.open(
-                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/ads.txt', '_blank'), 400); },
-        privacy: () => { cPrint('> ПОЛИТИКА'); setTimeout(() => window.open(
+        contact: () => cPrint('> TG: @RyabchukDev | VK: vk.ru/ryabchukdev | MAX: канал активен', '#fcee0a'),
+        vk: () => { cPrint('> VK'); setTimeout(() => window.open('https://vk.ru/ryabchukdev', '_blank'), 400); },
+        tg: () => { cPrint('> TG'); setTimeout(() => window.open('https://t.me/RyabchukDev', '_blank'), 400); },
+        max: () => {
+            cPrint('> MAX');
+            setTimeout(() => window.open(
+                'https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI', '_blank'), 400);
+        },
+        appads: () => {
+            cPrint('> APP-ADS.TXT');
+            setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/app-ads.txt', '_blank'), 400);
+        },
+        ads: () => {
+            cPrint('> ADS.TXT');
+            setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/ads.txt', '_blank'), 400);
+        },
+        privacy: () => {
+            cPrint('> ПОЛИТИКА');
+            setTimeout(() => window.open(
                 'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности',
-                '_blank'), 400); },
-        whoami: () => { cPrint('> ROOT // RYABCHUK_DEV // AUTHORIZED'); },
+                '_blank'), 400);
+        },
+        whoami: () => cPrint('> ROOT // RYABCHUK_DEV // AUTHORIZED'),
         clear: () => { consoleOutput.innerHTML = ''; },
         exit: () => toggleConsole(),
-        '420': () => { flash();
-            cPrint('> PROTOCOL_420: BREACH', '#fcee0a'); const s = document.getElementById(
-                'statDownloads'); if (s) s.textContent = (parseInt(s.textContent.replace(/\s/g, '')) +
-                420).toLocaleString(); },
-        '2077': () => { flash('#ff0055');
+        '420': () => {
+            flash();
+            cPrint('> PROTOCOL_420: BREACH', '#fcee0a');
+        },
+        '2077': () => {
+            flash('#ff0055');
             cPrint('> NIGHT CITY // WELCOME');
             document.body.style.boxShadow = 'inset 0 0 200px rgba(252,238,10,0.2)';
-            setTimeout(() => document.body.style.boxShadow = '', 3000); },
-        samozvanets: () => { flash('#ff0055');
-            cPrint('> САМОЗВАНЕЦ ОБНАРУЖЕН', '#ff0055'); },
-        ryabchuk: () => { cPrint(ascii, '#fcee0a');
-            cPrint('> FOUNDER IDENTIFIED', '#00f0ff'); },
+            setTimeout(() => document.body.style.boxShadow = '', 3000);
+        },
+        samozvanets: () => {
+            flash('#ff0055');
+            cPrint('> САМОЗВАНЕЦ ОБНАРУЖЕН', '#ff0055');
+        },
+        ryabchuk: () => {
+            cPrint(ascii, '#fcee0a');
+            cPrint('> FOUNDER IDENTIFIED', '#00f0ff');
+        },
     };
 
     consoleInput.addEventListener('keydown', e => {
@@ -1009,22 +979,10 @@ target="_blank" class="btn-main btn-policy">
         }
         if (e.key === 'Escape') toggleConsole();
     });
-    document.addEventListener('keydown', e => { if (e.key === '`' || e.key === '~') { e.preventDefault();
-            toggleConsole(); } });
-
-    // ============================================
-    // СЧЁТЧИКИ
-    // ============================================
-    setInterval(() => {
-        const d = document.getElementById('statDownloads');
-        const s = document.getElementById('statSubs');
-        const u = document.getElementById('statUptime');
-        if (d) d.textContent = (parseInt(d.textContent.replace(/\s/g, '')) + Math.floor(Math.random() *
-            3)).toLocaleString();
-        if (s) s.textContent = (parseInt(s.textContent.replace(/\s/g, '')) + Math.floor(Math.random() *
-            2)).toLocaleString();
-        if (u) u.textContent = (parseInt(u.textContent.replace(/\D/g, '')) + 1) + 'h';
-    }, 10000);
+    document.addEventListener('keydown', e => {
+        if (e.key === '`' || e.key === '~') { e.preventDefault();
+            toggleConsole(); }
+    });
 
     console.log('%c RYABCHUK_DEV v3.0 %c ALL SYSTEMS ONLINE %c ~ КОНСОЛЬ',
         'background:#fcee0a;color:#000;padding:6px;font-weight:bold;',
