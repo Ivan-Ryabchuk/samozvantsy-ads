@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RYABCHUK_DEV // SYSTEM_CORE v2.0</title>
+    <title>RYABCHUK_DEV // SYSTEM_CORE v3.0</title>
 
-    <!-- Three.js для 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
     </script>
 
@@ -15,12 +14,12 @@
             --neon-cyan: #00f0ff;
             --neon-green: #00ff41;
             --neon-red: #ff0055;
-            --bg-deep: #020203;
-            --bg-panel: #0a0a0c;
-            --border-dim: #1a1a2e;
+            --neon-purple: #b829ea;
+            --bg-void: #010101;
+            --bg-card: #080a0f;
+            --border-glow: #1a1f2e;
             --font-mono: 'Courier New', 'Fira Code', monospace;
             --font-display: 'Rajdhani', 'Arial Narrow', sans-serif;
-            --glitch-offset: 3px;
         }
 
         * {
@@ -30,19 +29,19 @@
         }
 
         body {
-            background: var(--bg-deep);
-            font-family: var(--font-mono);
-            color: var(--neon-green);
-            height: 100vh;
-            overflow: hidden;
+            background: var(--bg-void);
+            font-family: var(--font-display);
+            color: #fff;
+            min-height: 100vh;
             cursor: crosshair;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
 
         /* ============================================
-           МАТРИЧНЫЙ ФОН (Canvas)
+           МАТРИЧНЫЙ ФОН
            ============================================ */
         #matrixCanvas {
             position: fixed;
@@ -55,37 +54,27 @@
         }
 
         /* ============================================
-           ОБЩИЙ ОВЕРЛЕЙ
+           СКАНИРУЮЩИЕ ЛИНИИ
            ============================================ */
-        .main-overlay {
+        .scanline {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            gap: 10px;
-        }
-
-        /* ============================================
-           СКАНИРУЮЩАЯ ЛИНИЯ
-           ============================================ */
-        .scanline-global {
-            position: fixed;
-            top: 0;
             left: 0;
             width: 100%;
             height: 2px;
-            background: rgba(0, 255, 65, 0.15);
             z-index: 100;
             pointer-events: none;
-            animation: scanDown 4s linear infinite;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
         }
-
+        .scanline-1 {
+            top: 0;
+            background: rgba(0, 255, 65, 0.12);
+            animation: scanDown 3.5s linear infinite;
+        }
+        .scanline-2 {
+            top: 0;
+            background: rgba(0, 240, 255, 0.08);
+            animation: scanDown 5.5s linear infinite;
+            animation-delay: 1.5s;
+        }
         @keyframes scanDown {
             0% {
                 top: -2px;
@@ -96,325 +85,423 @@
         }
 
         /* ============================================
-           ТРОЙНАЯ ПАНЕЛЬ
+           ОСНОВНОЙ КОНТЕЙНЕР
            ============================================ */
-        .triple-panel {
-            display: flex;
-            gap: 12px;
-            flex: 1;
-            min-height: 0;
+        .main-container {
             position: relative;
             z-index: 2;
-        }
-
-        .panel {
-            background: rgba(10, 10, 12, 0.85);
-            border: 1.5px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 15px;
-            position: relative;
-            backdrop-filter: blur(6px);
-            box-shadow:
-                inset 0 0 40px rgba(0, 0, 0, 0.6),
-                0 0 25px rgba(0, 240, 255, 0.08);
-            transition: all 0.3s ease;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px 50px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            align-items: center;
+            gap: 25px;
+            min-height: 100vh;
         }
 
-        .panel:hover {
-            border-color: rgba(0, 240, 255, 0.4);
-            box-shadow:
-                inset 0 0 40px rgba(0, 0, 0, 0.6),
-                0 0 40px rgba(0, 240, 255, 0.2);
+        /* ============================================
+           ЗАГОЛОВОК
+           ============================================ */
+        .header-block {
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+            position: relative;
         }
 
-        .panel::before {
-            content: '';
+        .header-glitch {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: #fff;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            text-shadow:
+                0 0 10px var(--neon-cyan),
+                0 0 30px var(--neon-cyan),
+                0 0 60px var(--neon-cyan),
+                0 0 100px var(--neon-purple);
+            animation: headerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes headerPulse {
+            0%,
+            100% {
+                text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan), 0 0 60px var(--neon-cyan);
+            }
+            50% {
+                text-shadow: 0 0 20px var(--neon-yellow), 0 0 50px var(--neon-yellow), 0 0 80px var(--neon-red),
+                    0 0 120px var(--neon-purple);
+            }
+        }
+
+        .header-glitch::before,
+        .header-glitch::after {
+            content: 'RYABCHUK_DEV';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-            opacity: 0.5;
-            pointer-events: none;
+            height: 100%;
+            opacity: 0;
         }
 
-        .panel-header {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--neon-cyan);
-            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
-            padding-bottom: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font-display);
-            font-weight: 700;
-        }
-
-        .panel-header .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--neon-green);
-            animation: pulse-dot 1.5s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                box-shadow: 0 0 6px var(--neon-green);
-            }
-            50% {
-                box-shadow: 0 0 18px var(--neon-green), 0 0 30px var(--neon-cyan);
-            }
-        }
-
-        /* ============================================
-           ЛЕВАЯ ПАНЕЛЬ: ЛОГИ
-           ============================================ */
-        .panel-left {
-            flex: 0 0 260px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .log-container {
-            flex: 1;
-            overflow-y: auto;
-            font-size: 0.7rem;
-            line-height: 1.6;
-            color: rgba(0, 255, 65, 0.7);
-            padding-right: 5px;
-            min-height: 0;
-        }
-
-        .log-container::-webkit-scrollbar {
-            width: 3px;
-        }
-        .log-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .log-container::-webkit-scrollbar-thumb {
-            background: var(--neon-cyan);
-            border-radius: 2px;
-        }
-
-        .log-entry {
-            margin-bottom: 2px;
-            white-space: nowrap;
-        }
-        .log-entry .timestamp {
-            color: rgba(0, 240, 255, 0.6);
-            margin-right: 8px;
-        }
-        .log-entry.warn {
+        .header-glitch:hover::before {
+            opacity: 0.8;
             color: var(--neon-yellow);
+            animation: glitchSkew 0.3s infinite alternate-reverse;
+            left: -3px;
+            text-shadow: -3px 0 var(--neon-red);
         }
-        .log-entry.error {
-            color: var(--neon-red);
-        }
-
-        /* ============================================
-           ЦЕНТРАЛЬНАЯ ПАНЕЛЬ: REELS
-           ============================================ */
-        .panel-center {
-            flex: 1;
-            min-width: 320px;
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-            padding: 10px;
-            align-items: stretch;
+        .header-glitch:hover::after {
+            opacity: 0.8;
+            color: var(--neon-cyan);
+            animation: glitchSkew 0.4s infinite alternate;
+            left: 3px;
+            text-shadow: 3px 0 var(--neon-purple);
         }
 
-        .reels-wrapper {
-            flex: 1;
-            height: 100%;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            border-radius: 8px;
-            background: #000;
-            border: 1px solid var(--border-dim);
-            position: relative;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        @keyframes glitchSkew {
+            0% {
+                transform: skew(0deg);
+            }
+            20% {
+                transform: skew(2deg);
+            }
+            40% {
+                transform: skew(-2deg);
+            }
+            60% {
+                transform: skew(1deg);
+            }
+            80% {
+                transform: skew(-1deg);
+            }
+            100% {
+                transform: skew(0deg);
+            }
         }
 
-        .reels-wrapper::-webkit-scrollbar {
-            display: none;
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            color: var(--neon-cyan);
+            margin-top: 8px;
+            text-transform: uppercase;
+            opacity: 0.8;
         }
 
-        .reel-item {
-            height: 100%;
-            scroll-snap-align: center;
+        .status-bar {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000;
-            position: relative;
-        }
-
-        .reel-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .reel-overlay {
-            position: absolute;
-            bottom: 25px;
-            left: 12px;
-            right: 12px;
-            z-index: 2;
-            pointer-events: none;
-        }
-        .reel-title {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px #000;
-            font-family: var(--font-display);
-        }
-        .reel-subtitle {
-            color: var(--neon-cyan);
+            gap: 15px;
+            margin-top: 12px;
+            font-family: var(--font-mono);
             font-size: 0.7rem;
+            flex-wrap: wrap;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--neon-green);
+            animation: statusBlink 1.5s infinite;
+            box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+        }
+        @keyframes statusBlink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+        .status-text {
+            color: var(--neon-green);
             letter-spacing: 2px;
         }
 
-        /* Рекламный блок */
-        .reel-ad {
+        /* ============================================
+           ОСНОВНЫЕ КНОПКИ (БОЛЬШИЕ, АНИМИРОВАННЫЕ)
+           ============================================ */
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .btn-main {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 24px;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 1.05rem;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
             height: 100%;
-            scroll-snap-align: center;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+        .btn-main:hover::before {
+            left: 100%;
+        }
+
+        .btn-main::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple), var(--neon-yellow), var(--neon-cyan));
+            border-radius: 8px;
+            z-index: -2;
+            opacity: 0;
+            transition: opacity 0.35s;
+            filter: blur(8px);
+        }
+        .btn-main:hover::after {
+            opacity: 0.6;
+        }
+
+        .btn-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #050505;
-            border: 2px dashed rgba(252, 238, 10, 0.25);
+            border-radius: 6px;
+            flex-shrink: 0;
+            transition: all 0.35s;
+        }
+
+        .btn-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .btn-label .main-text {
+            font-size: 1rem;
+            letter-spacing: 3px;
+        }
+        .btn-label .sub-text {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            opacity: 0.6;
+            font-family: var(--font-mono);
+        }
+
+        .btn-arrow {
+            margin-left: auto;
+            font-size: 1.5rem;
+            transition: transform 0.35s;
+            opacity: 0.5;
+        }
+        .btn-main:hover .btn-arrow {
+            transform: translateX(8px);
+            opacity: 1;
+        }
+
+        /* Цветовые варианты кнопок */
+        .btn-telegram {
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .btn-telegram .btn-icon {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-cyan);
+        }
+        .btn-telegram:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3), inset 0 0 40px rgba(0, 240, 255, 0.05);
+        }
+
+        .btn-vk {
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+        .btn-vk .btn-icon {
+            background: rgba(0, 240, 255, 0.1);
+            color: #0077ff;
+        }
+        .btn-vk:hover {
+            border-color: #0077ff;
+            box-shadow: 0 0 40px rgba(0, 119, 255, 0.3), inset 0 0 40px rgba(0, 119, 255, 0.05);
+        }
+
+        .btn-max {
+            border-color: rgba(252, 238, 10, 0.4);
+        }
+        .btn-max .btn-icon {
+            background: rgba(252, 238, 10, 0.1);
+            color: var(--neon-yellow);
+        }
+        .btn-max:hover {
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 40px rgba(252, 238, 10, 0.3), inset 0 0 40px rgba(252, 238, 10, 0.05);
+        }
+
+        .btn-apk {
+            border-color: rgba(0, 255, 65, 0.4);
+        }
+        .btn-apk .btn-icon {
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--neon-green);
+        }
+        .btn-apk:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.3), inset 0 0 40px rgba(0, 255, 65, 0.05);
+        }
+
+        .btn-ads {
+            border-color: rgba(184, 41, 234, 0.4);
+        }
+        .btn-ads .btn-icon {
+            background: rgba(184, 41, 234, 0.1);
+            color: var(--neon-purple);
+        }
+        .btn-ads:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 40px rgba(184, 41, 234, 0.3), inset 0 0 40px rgba(184, 41, 234, 0.05);
+        }
+
+        .btn-policy {
+            border-color: rgba(255, 0, 85, 0.4);
+        }
+        .btn-policy .btn-icon {
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--neon-red);
+        }
+        .btn-policy:hover {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.3), inset 0 0 40px rgba(255, 0, 85, 0.05);
+        }
+
+        /* ============================================
+           РЕКЛАМНЫЙ БЛОК
+           ============================================ */
+        .ad-section {
+            width: 100%;
+            max-width: 550px;
+            border: 2px dashed rgba(252, 238, 10, 0.3);
             border-radius: 8px;
+            padding: 20px;
+            background: rgba(252, 238, 10, 0.02);
+            text-align: center;
             position: relative;
         }
-        .ad-placeholder {
-            text-align: center;
+        .ad-section::before {
+            content: 'AD BLOCK';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-void);
+            padding: 2px 15px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            color: var(--neon-yellow);
+            border: 1px solid rgba(252, 238, 10, 0.3);
+            border-radius: 2px;
+        }
+        .ad-inner {
             color: #555;
-            padding: 15px;
             font-family: var(--font-mono);
             font-size: 0.75rem;
-        }
-        .ad-placeholder .ad-tag {
-            color: var(--neon-yellow);
-            letter-spacing: 3px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        /* Сайдбар Reels */
-        .reels-sidebar {
-            width: 55px;
+            min-height: 60px;
             display: flex;
+            align-items: center;
+            justify-content: center;
             flex-direction: column;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-        .nav-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.3rem;
-            color: var(--neon-cyan);
-            transition: all 0.25s;
-        }
-        .nav-icon:hover {
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 25px rgba(252, 238, 10, 0.3);
-            color: var(--neon-yellow);
-            transform: scale(1.08);
-        }
-        .nav-icon.active {
-            border-color: var(--neon-yellow);
-            background: rgba(252, 238, 10, 0.1);
+            gap: 8px;
         }
 
         /* ============================================
-           ПРАВАЯ ПАНЕЛЬ: МОНИТОРИНГ
+           СТАТИСТИКА
            ============================================ */
-        .panel-right {
-            flex: 0 0 250px;
+        .stats-row {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 15px;
+            width: 100%;
+            max-width: 550px;
+            flex-wrap: wrap;
         }
-
-        .stat-block {
-            border: 1px solid rgba(0, 240, 255, 0.15);
+        .stat-card {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
             border-radius: 6px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+        }
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 15px var(--neon-yellow);
+            font-family: var(--font-display);
         }
         .stat-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             letter-spacing: 3px;
             color: var(--neon-cyan);
             text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--neon-yellow);
-            font-family: var(--font-display);
-            text-shadow: 0 0 15px var(--neon-yellow);
-        }
-        .stat-bar {
-            height: 4px;
-            background: #111;
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .stat-bar-fill {
-            height: 100%;
-            background: var(--neon-cyan);
-            border-radius: 2px;
-            transition: width 0.6s ease;
+            margin-top: 4px;
         }
 
         /* ============================================
-           НИЖНЕЕ ТАБЛО
+           БЕГУЩАЯ СТРОКА
            ============================================ */
-        .ticker-bar {
-            position: relative;
-            z-index: 2;
-            height: 36px;
-            background: rgba(10, 10, 12, 0.9);
-            border: 1px solid var(--border-dim);
+        .ticker-wrap {
+            width: 100%;
+            max-width: 550px;
+            height: 32px;
+            background: rgba(8, 10, 15, 0.9);
+            border: 1px solid var(--border-glow);
             border-radius: 4px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            padding: 0 15px;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
+            padding: 0 12px;
         }
         .ticker-text {
             white-space: nowrap;
-            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
             letter-spacing: 2px;
             color: var(--neon-cyan);
-            animation: tickerScroll 20s linear infinite;
+            animation: tickerScroll 18s linear infinite;
         }
         @keyframes tickerScroll {
             0% {
@@ -426,17 +513,14 @@
         }
 
         /* ============================================
-           3D КОНТЕЙНЕР
+           ФУТЕР
            ============================================ */
-        #threeContainer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 140px;
-            height: 140px;
-            z-index: 3;
-            pointer-events: none;
-            opacity: 0.6;
+        .footer-text {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
         }
 
         /* ============================================
@@ -448,7 +532,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.92);
+            background: rgba(0, 0, 0, 0.93);
             z-index: 200;
             display: none;
             flex-direction: column;
@@ -476,7 +560,6 @@
         .console-prompt {
             color: var(--neon-cyan);
             font-weight: bold;
-            font-size: 0.9rem;
         }
         #consoleInput {
             flex: 1;
@@ -492,141 +575,86 @@
             position: fixed;
             bottom: 15px;
             right: 20px;
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.6rem;
             letter-spacing: 2px;
             z-index: 201;
-            pointer-events: none;
-        }
-
-        /* ============================================
-           КНОПКИ ДЕЙСТВИЙ
-           ============================================ */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            z-index: 2;
-            position: relative;
-        }
-        .btn-cyber {
-            padding: 10px 20px;
-            background: transparent;
-            border: 1.5px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            font-family: var(--font-display);
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
             cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-            font-size: 0.8rem;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            font-family: var(--font-mono);
+            transition: color 0.3s;
         }
-        .btn-cyber:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 35px var(--neon-cyan);
-        }
-        .btn-cyber.yellow {
-            border-color: var(--neon-yellow);
-            color: var(--neon-yellow);
-        }
-        .btn-cyber.yellow:hover {
-            background: var(--neon-yellow);
-            color: #000;
-            box-shadow: 0 0 35px var(--neon-yellow);
-        }
-        .btn-cyber.red {
-            border-color: var(--neon-red);
-            color: var(--neon-red);
-        }
-        .btn-cyber.red:hover {
-            background: var(--neon-red);
-            color: #000;
-            box-shadow: 0 0 35px var(--neon-red);
+        .console-hint:hover {
+            color: var(--neon-cyan);
         }
 
         /* ============================================
-           ПАСХАЛКИ: ГЛИТЧ-ЭКРАН
+           3D ЭЛЕМЕНТ
+           ============================================ */
+        #threeContainer {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 120px;
+            height: 120px;
+            z-index: 3;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* ============================================
+           ГЛИТЧ-ФЛЕШ
            ============================================ */
         .glitch-flash {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(252, 238, 10, 0.15);
+            inset: 0;
+            background: rgba(252, 238, 10, 0.12);
             z-index: 300;
             pointer-events: none;
-            animation: flashBang 0.4s ease-out forwards;
             display: none;
-        }
-        @keyframes flashBang {
-            0% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-            }
         }
 
         /* ============================================
            АДАПТИВНОСТЬ
            ============================================ */
-        @media (max-width: 900px) {
-            .triple-panel {
-                flex-direction: column;
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 15px 10px 30px;
+                gap: 15px;
+            }
+            .btn-main {
+                padding: 14px 16px;
+                font-size: 0.9rem;
+                gap: 10px;
+            }
+            .btn-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1.5rem;
+            }
+            .btn-label .main-text {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+            .btn-label .sub-text {
+                font-size: 0.6rem;
+            }
+            .btn-arrow {
+                font-size: 1.2rem;
+            }
+            .stats-row {
                 gap: 8px;
             }
-            .panel-left,
-            .panel-right {
-                flex: 0 0 auto;
-                max-height: 150px;
-                width: 100%;
+            .stat-card {
+                padding: 10px;
             }
-            .panel-center {
-                flex: 1;
-                min-height: 50vh;
-            }
-            .reels-sidebar {
-                width: 40px;
-                gap: 6px;
-            }
-            .nav-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 1rem;
+            .stat-num {
+                font-size: 1.4rem;
             }
             #threeContainer {
                 display: none;
             }
-            .panel-left {
-                display: none;
-            }
-            .action-buttons {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .panel-right {
-                display: none;
-            }
-            .btn-cyber {
-                padding: 8px 14px;
-                font-size: 0.7rem;
-                letter-spacing: 1px;
-            }
-            .ticker-bar {
-                height: 28px;
-                font-size: 0.6rem;
-            }
-            .action-buttons {
-                gap: 5px;
+            .header-glitch {
+                letter-spacing: 4px;
             }
         }
     </style>
@@ -636,161 +664,162 @@
     <!-- Матричный фон -->
     <canvas id="matrixCanvas"></canvas>
 
-    <!-- Сканирующая линия -->
-    <div class="scanline-global"></div>
+    <!-- Сканирующие линии -->
+    <div class="scanline scanline-1"></div>
+    <div class="scanline scanline-2"></div>
 
-    <!-- Глитч-флеш для пасхалок -->
+    <!-- Глитч-флеш -->
     <div class="glitch-flash" id="glitchFlash"></div>
 
-    <!-- Основной оверлей -->
-    <div class="main-overlay" id="mainOverlay">
+    <!-- Основной контент -->
+    <div class="main-container">
 
-        <!-- Кнопки действий -->
-        <div class="action-buttons">
+        <!-- Заголовок -->
+        <div class="header-block">
+            <div class="header-glitch">RYABCHUK_DEV</div>
+            <div class="subtitle">// SYSTEM_CORE v3.0</div>
+            <div class="status-bar">
+                <div class="status-dot"></div>
+                <span class="status-text">ONLINE</span>
+                <span style="color:#555;">|</span>
+                <span style="color:var(--neon-cyan);letter-spacing:2px;">NODE: ACTIVE</span>
+                <span style="color:#555;">|</span>
+                <span style="color:var(--neon-yellow);letter-spacing:2px;">SEC: ENCRYPTED</span>
+            </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-num" id="statDownloads">1 337</div>
+                <div class="stat-label">Downloads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="statSubs">2 077</div>
+                <div class="stat-label">Followers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="statUptime">420h</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+
+        <!-- Основные кнопки -->
+        <div class="btn-grid">
+
+            <!-- Скачать APK -->
             <a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0"
-            target="_blank" class="btn-cyber yellow">
-            ⬇ СКАЧАТЬ APK
+            target="_blank" class="btn-main btn-apk">
+            <div class="btn-icon">⬇</div>
+            <div class="btn-label">
+                <span class="main-text">СКАЧАТЬ APK</span>
+                <span class="sub-text">Версия 1.0 // GitHub Releases</span>
+            </div>
+            <span class="btn-arrow">▶</span>
         </a>
-        <a href="https://t.me/RyabchukDev" target="_blank" class="btn-cyber">
-            📡 TELEGRAM
+
+        <!-- Telegram -->
+        <a href="https://t.me/RyabchukDev" target="_blank" class="btn-main btn-telegram">
+            <div class="btn-icon">📡</div>
+            <div class="btn-label">
+                <span class="main-text">TELEGRAM</span>
+                <span class="sub-text">@RyabchukDev // Канал</span>
+            </div>
+            <span class="btn-arrow">▶</span>
         </a>
-        <a href="https://vk.ru/ryabchukdev" target="_blank" class="btn-cyber">
-            🔷 VK
+
+        <!-- VK -->
+        <a href="https://vk.ru/ryabchukdev" target="_blank" class="btn-main btn-vk">
+            <div class="btn-icon">🔷</div>
+            <div class="btn-label">
+                <span class="main-text">VKONTAKTE</span>
+                <span class="sub-text">vk.ru/ryabchukdev</span>
+            </div>
+            <span class="btn-arrow">▶</span>
         </a>
+
+        <!-- Max -->
         <a href="https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI"
-        target="_blank" class="btn-cyber">
-        🎬 MAX
+        target="_blank" class="btn-main btn-max">
+        <div class="btn-icon">🎬</div>
+        <div class="btn-label">
+            <span class="main-text">MAX</span>
+            <span class="sub-text">Канал на платформе Max</span>
+        </div>
+        <span class="btn-arrow">▶</span>
     </a>
-    <a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности"
-    target="_blank" class="btn-cyber red">
-    📄 ПОЛИТИКА
+
+    <!-- app-ads.txt -->
+    <a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/app-ads.txt"
+    target="_blank" class="btn-main btn-ads">
+    <div class="btn-icon">📋</div>
+    <div class="btn-label">
+        <span class="main-text">APP-ADS.TXT</span>
+        <span class="sub-text">Файл авторизации рекламы</span>
+    </div>
+    <span class="btn-arrow">▶</span>
 </a>
-<button class="btn-cyber" onclick="toggleConsole()" title="Открыть консоль (~)">
-    >_ КОНСОЛЬ
-</button>
+
+<!-- ads.txt -->
+<a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/ads.txt"
+target="_blank" class="btn-main btn-ads">
+<div class="btn-icon">📄</div>
+<div class="btn-label">
+    <span class="main-text">ADS.TXT</span>
+    <span class="sub-text">Файл рекламной инвентаризации</span>
+</div>
+<span class="btn-arrow">▶</span>
+</a>
+
+<!-- Политика конфиденциальности -->
+<a href="https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности"
+target="_blank" class="btn-main btn-policy">
+<div class="btn-icon">🔒</div>
+<div class="btn-label">
+    <span class="main-text">ПОЛИТИКА</span>
+    <span class="sub-text">Конфиденциальность данных</span>
+</div>
+<span class="btn-arrow">▶</span>
+</a>
 </div>
 
-<!-- Тройная панель -->
-<div class="triple-panel">
-
-    <!-- Левая панель: логи -->
-    <div class="panel panel-left" id="leftPanel">
-        <div class="panel-header"><span class="dot"></span> SYS.LOG</div>
-        <div class="log-container" id="logContainer"></div>
+<!-- Рекламный блок -->
+<div class="ad-section">
+    <div class="ad-inner">
+        <!-- СЮДА ВСТАВИТЬ КОД РСЯ -->
+        <span style="color:#444;">&lt;!-- Yandex.RTB R-A-XXXXX-X --&gt;</span>
+        <span style="color:#444;">&lt;div id="yandex_rtb"&gt;&lt;/div&gt;</span>
     </div>
-
-    <!-- Центральная панель: Reels -->
-    <div class="panel panel-center">
-        <div class="reels-sidebar">
-            <div class="nav-icon active">⌂</div>
-            <div class="nav-icon">⚡</div>
-            <div class="nav-icon">☠</div>
-            <div class="nav-icon" onclick="location.reload()">♺</div>
-        </div>
-        <div class="reels-wrapper" id="reelsWrapper">
-            <!-- Видео 1 -->
-            <div class="reel-item">
-                <video loop muted playsinline preload="metadata">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                </video>
-                <div class="reel-overlay">
-                    <div class="reel-title">КИБЕР-НОЧЬ</div>
-                    <div class="reel-subtitle">NIGHT CITY // 2077</div>
-                </div>
-            </div>
-            <!-- Реклама -->
-            <div class="reel-ad">
-                <div class="ad-placeholder">
-                    <div class="ad-tag">[ AD BLOCK ]</div>
-                    <!-- СЮДА ВСТАВИТЬ КОД РСЯ -->
-                    <div style="color:#444;font-size:0.7rem;">
-                        &lt;!-- Yandex.RTB R-A-XXXXX-X --&gt;<br>
-                        &lt;div id="yandex_rtb"&gt;&lt;/div&gt;
-                    </div>
-                </div>
-            </div>
-            <!-- Видео 2 -->
-            <div class="reel-item">
-                <video loop muted playsinline preload="metadata">
-                    <source src="https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
-                </video>
-                <div class="reel-overlay">
-                    <div class="reel-title">НЕОНОВЫЙ ДОЖДЬ</div>
-                    <div class="reel-subtitle">BLADE RUNNER // 2049</div>
-                </div>
-            </div>
-            <!-- Видео 3 -->
-            <div class="reel-item">
-                <video loop muted playsinline preload="metadata">
-                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                </video>
-                <div class="reel-overlay">
-                    <div class="reel-title">СИСТЕМНЫЙ СБОЙ</div>
-                    <div class="reel-subtitle">GLITCH_PROTOCOL // v2.0</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Правая панель: мониторинг -->
-    <div class="panel panel-right" id="rightPanel">
-        <div class="panel-header"><span class="dot"></span> MONITOR</div>
-        <div class="stat-block">
-            <div class="stat-label">APK Downloads</div>
-            <div class="stat-value" id="statDownloads">1 337</div>
-            <div class="stat-bar"><div class="stat-bar-fill" style="width:67%"></div></div>
-        </div>
-        <div class="stat-block">
-            <div class="stat-label">TG Subscribers</div>
-            <div class="stat-value" id="statSubs">2 077</div>
-            <div class="stat-bar"><div class="stat-bar-fill" style="width:82%"></div></div>
-        </div>
-        <div class="stat-block">
-            <div class="stat-label">System Uptime</div>
-            <div class="stat-value" id="statUptime">420h</div>
-            <div class="stat-bar"><div class="stat-bar-fill" style="width:91%"></div></div>
-        </div>
-        <!-- Ссылки в правой панели -->
-        <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;">
-            <a href="https://vk.ru/ryabchukdev" target="_blank"
-            style="color:var(--neon-cyan);text-decoration:none;font-size:0.65rem;letter-spacing:2px;text-align:center;border:1px solid rgba(0,240,255,0.2);padding:6px;border-radius:4px;transition:all 0.3s;"
-            onmouseover="this.style.borderColor='#fcee0a';this.style.color='#fcee0a';"
-            onmouseout="this.style.borderColor='rgba(0,240,255,0.2)';this.style.color='#00f0ff';">
-            🔷 VK
-        </a>
-        <a href="https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI" target="_blank"
-        style="color:var(--neon-cyan);text-decoration:none;font-size:0.65rem;letter-spacing:2px;text-align:center;border:1px solid rgba(0,240,255,0.2);padding:6px;border-radius:4px;transition:all 0.3s;"
-        onmouseover="this.style.borderColor='#fcee0a';this.style.color='#fcee0a';"
-        onmouseout="this.style.borderColor='rgba(0,240,255,0.2)';this.style.color='#00f0ff';">
-        🎬 MAX
-    </a>
-</div>
-</div>
 </div>
 
 <!-- Бегущая строка -->
-<div class="ticker-bar">
+<div class="ticker-wrap">
     <div class="ticker-text">
-        > APK v1.0 НА GITHUB // > VK: vk.ru/ryabchukdev // > TG: @RyabchukDev //
-        > MAX: КАНАЛ АКТИВЕН // > ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ ДОСТУПНА //
-        > САМОЗВАНЕЦ ОБНАРУЖЕН: ПРОТОКОЛ ЗАПУЩЕН // > НАЖМИ ~ ДЛЯ КОНСОЛИ
+        > APK v1.0 НА GITHUB // > TG: @RyabchukDev // > VK: vk.ru/ryabchukdev //
+        > MAX: КАНАЛ АКТИВЕН // > APP-ADS.TXT ЗАГРУЖЕН // > ADS.TXT ЗАГРУЖЕН //
+        > ПОЛИТИКА ДОСТУПНА // > НАЖМИ ~ ДЛЯ КОНСОЛИ
     </div>
+</div>
+
+<!-- Футер -->
+<div class="footer-text">
+    © 2026 RYABCHUK_DEV. ALL RIGHTS PROTECTED. ENCRYPTED CONNECTION.
 </div>
 </div>
 
-<!-- 3D Контейнер -->
+<!-- 3D элемент -->
 <div id="threeContainer"></div>
 
 <!-- Консоль -->
 <div class="console-overlay" id="consoleOverlay">
     <div class="console-output" id="consoleOutput">
-        > RYABCHUK_DEV CONSOLE v2.0<br>
+        > RYABCHUK_DEV CONSOLE v3.0<br>
         > Введите 'help' для списка команд<br>
         > --------------------------------<br>
     </div>
     <div class="console-input-row">
-        <span class="console-prompt">guest@ryabchuk:~$</span>
-        <input type="text" id="consoleInput" autofocus autocomplete="off" spellcheck="false">
+        <span class="console-prompt">root@ryabchuk:~#</span>
+        <input type="text" id="consoleInput" autocomplete="off" spellcheck="false">
     </div>
 </div>
 <div class="console-hint" onclick="toggleConsole()">[ ~ КОНСОЛЬ ]</div>
@@ -801,51 +830,40 @@
     // ============================================
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
-    let width, height;
-    let columns, drops;
+    let width, height, columns, drops;
     const chars =
-        'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF@#$%&';
+        'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF@#$%&*';
     let mouseX = -1000,
         mouseY = -1000;
 
     function resizeCanvas() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-        columns = Math.floor(width / 18);
+        columns = Math.floor(width / 16);
         drops = new Array(columns).fill(1);
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
+    document.addEventListener('mousemove', e => { mouseX = e.clientX;
+        mouseY = e.clientY; });
 
     function drawMatrix() {
-        ctx.fillStyle = 'rgba(2, 2, 3, 0.08)';
+        ctx.fillStyle = 'rgba(1, 1, 1, 0.07)';
         ctx.fillRect(0, 0, width, height);
-        ctx.font = '15px monospace';
-
+        ctx.font = '14px monospace';
         for (let i = 0; i < drops.length; i++) {
-            const x = i * 18;
-            const y = drops[i] * 18;
+            const x = i * 16;
+            const y = drops[i] * 16;
             const dist = Math.hypot(x - mouseX, y - mouseY);
-
-            if (dist < 100) {
+            if (dist < 80) {
                 ctx.fillStyle = Math.random() > 0.5 ? '#fcee0a' : '#00f0ff';
-                ctx.font = 'bold 16px monospace';
+                ctx.font = 'bold 15px monospace';
             } else {
                 const r = Math.random();
-                if (r < 0.7) ctx.fillStyle = '#00ff41';
-                else if (r < 0.9) ctx.fillStyle = '#00f0ff';
-                else ctx.fillStyle = '#fcee0a';
-                ctx.font = '15px monospace';
+                ctx.fillStyle = r < 0.7 ? '#00ff41' : r < 0.9 ? '#00f0ff' : '#fcee0a';
+                ctx.font = '14px monospace';
             }
-
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, x, y);
-
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], x, y);
             if (y > height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
         }
@@ -854,128 +872,46 @@
     drawMatrix();
 
     // ============================================
-    // ЛОГИ (ЛЕВАЯ ПАНЕЛЬ)
+    // 3D THREE.JS
     // ============================================
-    const logContainer = document.getElementById('logContainer');
-    const logMessages = [
-        'СИСТЕМА ЗАПУЩЕНА',
-        'МОДУЛЬ ЗАЩИТЫ АКТИВЕН',
-        'ПОДКЛЮЧЕНИЕ К УЗЛУ...',
-        'ШИФРОВАНИЕ: AES-256',
-        'ПРОВЕРКА ЦЕЛОСТНОСТИ',
-        'СКАНИРОВАНИЕ СЕТИ',
-        'ОБНАРУЖЕН ТРАФИК',
-        'ПАКЕТЫ ПЕРЕХВАЧЕНЫ',
-        'МАРШРУТИЗАЦИЯ...',
-        'УЗЕЛ ПОДТВЕРЖДЁН',
-        'VK: ПОДКЛЮЧЕНИЕ УСТАНОВЛЕНО',
-        'TG: КАНАЛ АКТИВЕН',
-        'MAX: СТРИМ-УЗЕЛ ОНЛАЙН',
-        'ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ: ЗАГРУЖЕНА',
-    ];
-
-    function addLog(msg, type = '') {
-        const now = new Date();
-        const ts = now.toTimeString().split(' ')[0];
-        const entry = document.createElement('div');
-        entry.className = 'log-entry ' + type;
-        entry.innerHTML = `<span class="timestamp">[${ts}]</span> ${msg}`;
-        logContainer.appendChild(entry);
-        logContainer.scrollTop = logContainer.scrollHeight;
-        if (logContainer.children.length > 40) {
-            logContainer.removeChild(logContainer.firstChild);
-        }
-    }
-
-    setInterval(() => {
-        const msg = logMessages[Math.floor(Math.random() * logMessages.length)];
-        const types = ['', 'warn', 'error', '', ''];
-        const type = types[Math.floor(Math.random() * types.length)];
-        addLog(msg, type);
-    }, 1500);
-
-    for (let i = 0; i < 10; i++) {
-        addLog(logMessages[i], '');
-    }
-
-    // ============================================
-    // REELS: УПРАВЛЕНИЕ ВИДЕО
-    // ============================================
-    const reelsWrapper = document.getElementById('reelsWrapper');
-    const allVideos = reelsWrapper.querySelectorAll('video');
-
-    const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const vid = entry.target;
-            if (entry.isIntersecting) {
-                allVideos.forEach(v => { if (v !== vid && !v.paused) v.pause(); });
-                vid.play().catch(() => {});
-            } else {
-                vid.pause();
-            }
-        });
-    }, { root: reelsWrapper, threshold: 0.7 });
-
-    allVideos.forEach(v => {
-        v.muted = true;
-        v.loop = true;
-        videoObserver.observe(v);
-        v.addEventListener('click', (e) => {
-            e.stopPropagation();
-            v.paused ? v.play() : v.pause();
-        });
-    });
-
-    if (allVideos.length > 0) allVideos[0].play().catch(() => {});
-
-    // ============================================
-    // 3D THREE.JS (ЧЕРЕП)
-    // ============================================
-    const threeContainer = document.getElementById('threeContainer');
-    if (threeContainer && window.innerWidth > 900) {
+    const tc = document.getElementById('threeContainer');
+    if (tc && window.innerWidth > 600) {
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-        camera.position.z = 3.5;
+        const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+        camera.position.z = 4;
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(140, 140);
+        renderer.setSize(120, 120);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        threeContainer.appendChild(renderer.domElement);
+        tc.appendChild(renderer.domElement);
 
-        const geometry = new THREE.SphereGeometry(1, 32, 32);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0xfcee0a,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.5,
-        });
-        const skull = new THREE.Mesh(geometry, material);
-        scene.add(skull);
+        const geo = new THREE.IcosahedronGeometry(1, 1);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xfcee0a, wireframe: true, transparent: true,
+            opacity: 0.4 });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene.add(mesh);
 
-        const ringGeo = new THREE.TorusGeometry(1.3, 0.03, 16, 64);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true,
-            opacity: 0.6 });
+        const ringGeo = new THREE.TorusGeometry(1.4, 0.02, 8, 48);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.5 });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.rotation.x = Math.PI / 2;
         scene.add(ring);
 
-        document.addEventListener('mousemove', (e) => {
-            const rx = (e.clientY / window.innerHeight - 0.5) * 2;
-            const ry = (e.clientX / window.innerWidth - 0.5) * 2;
-            skull.rotation.x = rx;
-            skull.rotation.y = ry;
+        document.addEventListener('mousemove', e => {
+            mesh.rotation.x = (e.clientY / height - 0.5) * 2;
+            mesh.rotation.y = (e.clientX / width - 0.5) * 2;
         });
 
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-            skull.rotation.y += 0.005;
-            ring.rotation.z += 0.008;
+        function anim() {
+            requestAnimationFrame(anim);
+            mesh.rotation.y += 0.006;
+            ring.rotation.z += 0.01;
             renderer.render(scene, camera);
         }
-        animate3D();
+        anim();
     }
 
     // ============================================
-    // КОНСОЛЬ И ПАСХАЛКИ
+    // КОНСОЛЬ
     // ============================================
     const consoleOverlay = document.getElementById('consoleOverlay');
     const consoleOutput = document.getElementById('consoleOutput');
@@ -983,222 +919,116 @@
     const glitchFlash = document.getElementById('glitchFlash');
 
     function toggleConsole() {
-        const isOpen = consoleOverlay.classList.contains('open');
-        if (isOpen) {
-            consoleOverlay.classList.remove('open');
-            consoleInput.blur();
-        } else {
-            consoleOverlay.classList.add('open');
-            consoleInput.focus();
-        }
+        const open = consoleOverlay.classList.contains('open');
+        if (open) { consoleOverlay.classList.remove('open');
+            consoleInput.blur(); } else { consoleOverlay.classList.add('open');
+            consoleInput.focus(); }
     }
 
-    function consolePrint(text, color = '#00ff41') {
-        const line = document.createElement('div');
-        line.style.color = color;
-        line.textContent = text;
-        consoleOutput.appendChild(line);
+    function cPrint(text, color = '#00ff41') {
+        const d = document.createElement('div');
+        d.style.color = color;
+        d.textContent = text;
+        consoleOutput.appendChild(d);
         consoleOutput.scrollTop = consoleOutput.scrollHeight;
     }
 
-    function triggerFlash(color = '#fcee0a') {
-        glitchFlash.style.background = `rgba(${color === '#fcee0a' ? '252,238,10' : '255,0,85'}, 0.2)`;
+    function flash(color = '#fcee0a') {
+        glitchFlash.style.background = `rgba(${color==='#fcee0a'?'252,238,10':'255,0,85'},0.15)`;
         glitchFlash.style.display = 'block';
-        glitchFlash.style.animation = 'none';
-        void glitchFlash.offsetWidth;
-        glitchFlash.style.animation = 'flashBang 0.5s ease-out forwards';
-        setTimeout(() => { glitchFlash.style.display = 'none'; }, 500);
+        setTimeout(() => glitchFlash.style.display = 'none', 400);
     }
 
-    const asciiLogo = `
-    ██████╗ ██╗   ██╗ █████╗ ██████╗  ██████╗██╗  ██╗██╗   ██╗██╗  ██╗
-    ██╔══██╗╚██╗ ██╔╝██╔══██╗██╔══██╗██╔════╝██║  ██║██║   ██║██║ ██╔╝
-    ██████╔╝ ╚████╔╝ ███████║██████╔╝██║     ███████║██║   ██║█████╔╝
-    ██╔══██╗  ╚██╔╝  ██╔══██║██╔══██╗██║     ██╔══██║██║   ██║██╔═██╗
-    ██║  ██║   ██║   ██║  ██║██████╔╝╚██████╗██║  ██║╚██████╔╝██║  ██╗
-    ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═════╝  ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝
-    `;
+    const ascii = `
+╔═══╗╔══╗╔═══╗╔══╗╔═══╗╔══╗╔╗╔╗╔══╗╔╗╔╗
+║╔══╝╚╗╔╝║╔═╗║║╔╗║║╔═╗║║╔╗║║║║║║╔╗║║║║║
+║╚══╗║║ ║╚═╝║║╚╝║║╚═╝║║╚╝║║╚╝║║╚╝║║╚╝║
+║╔══╝║║ ║╔╗╔╝║╔╗║║╔╗╔╝║╔╗║║╔╗║║╔╗║╚═╗║
+║╚══╗║║ ║║║╚╗║║║║║║║╚╗║║║║║║║║║║║║╔═╝║
+╚═══╝╚╝ ╚╝╚═╝╚╝╚╝╚╝╚═╝╚╝╚╝╚╝╚╝╚╝╚╝╚══╝
+`;
 
-    const commands = {
-        'help': () => {
-            consolePrint('> ДОСТУПНЫЕ КОМАНДЫ:', '#00f0ff');
-            consolePrint('  help       - список команд');
-            consolePrint('  status     - статус системы');
-            consolePrint('  download   - скачать APK');
-            consolePrint('  contact    - все контакты');
-            consolePrint('  vk         - открыть VK');
-            consolePrint('  tg         - открыть Telegram');
-            consolePrint('  max        - открыть Max');
-            consolePrint('  privacy    - политика конфиденциальности');
-            consolePrint('  whoami     - кто ты');
-            consolePrint('  clear      - очистить консоль');
-            consolePrint('  exit       - закрыть консоль');
+    const cmds = {
+        help: () => {
+            cPrint('> КОМАНДЫ:', '#00f0ff');
+            ['help', 'status', 'download', 'contact', 'vk', 'tg', 'max', 'appads', 'ads', 'privacy', 'whoami',
+                'clear', 'exit'
+            ].forEach(c => cPrint(`  ${c}`, '#888'));
         },
-        'status': () => {
-            consolePrint('> SYSTEM STATUS: ONLINE');
-            consolePrint('> APK v1.0: AVAILABLE');
-            consolePrint('> TG CHANNEL: @RyabchukDev');
-            consolePrint('> VK: vk.ru/ryabchukdev');
-            consolePrint('> MAX: КАНАЛ АКТИВЕН');
-            consolePrint('> ПОЛИТИКА: ЗАГРУЖЕНА');
+        status: () => {
+            cPrint('> SYSTEM: ONLINE // ALL NODES ACTIVE');
         },
-        'download': () => {
-            consolePrint('> ПЕРЕХОД НА GitHub...');
-            consolePrint(
-                '> https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0',
-                '#fcee0a');
-            setTimeout(() => {
-                window.open(
-                    'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0',
-                    '_blank');
-            }, 600);
+        download: () => {
+            cPrint('> GITHUB APK v1.0', '#fcee0a');
+            setTimeout(
+                () => window.open(
+                    'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0', '_blank'),
+                400);
         },
-        'contact': () => {
-            consolePrint('> === ВСЕ КОНТАКТЫ ===', '#00f0ff');
-            consolePrint('> TELEGRAM: https://t.me/RyabchukDev', '#fcee0a');
-            consolePrint('> VK: https://vk.ru/ryabchukdev', '#fcee0a');
-            consolePrint('> MAX: https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI',
-                '#fcee0a');
-            consolePrint(
-                '> ПОЛИТИКА: https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности',
-                '#ff0055');
-        },
-        'vk': () => {
-            consolePrint('> ОТКРЫТИЕ VK...', '#fcee0a');
-            setTimeout(() => { window.open('https://vk.ru/ryabchukdev', '_blank'); }, 400);
-        },
-        'tg': () => {
-            consolePrint('> ОТКРЫТИЕ TELEGRAM...', '#fcee0a');
-            setTimeout(() => { window.open('https://t.me/RyabchukDev', '_blank'); }, 400);
-        },
-        'max': () => {
-            consolePrint('> ОТКРЫТИЕ MAX...', '#fcee0a');
-            setTimeout(() => {
-                window.open(
-                    'https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI',
-                    '_blank');
-            }, 400);
-        },
-        'privacy': () => {
-            consolePrint('> ОТКРЫТИЕ ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ...', '#ff0055');
-            setTimeout(() => {
-                window.open(
-                    'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности',
-                    '_blank');
-            }, 400);
-        },
-        'whoami': () => {
-            consolePrint('> USER: GUEST // ACCESS_LEVEL: RESTRICTED');
-            consolePrint('> NODE: RYABCHUK_DEV_NETWORK');
-        },
-        'clear': () => {
-            consoleOutput.innerHTML = '';
-        },
-        'exit': () => {
-            toggleConsole();
-        },
-        '420': () => {
-            triggerFlash('#fcee0a');
-            consolePrint('> PROTOCOL_420: SYSTEM_BREACH...');
-            consolePrint('> FIREWALL BYPASSED // NODE COMPROMISED', '#fcee0a');
-            const statVal = document.getElementById('statDownloads');
-            if (statVal) {
-                const current = parseInt(statVal.textContent.replace(/\s/g, '')) || 0;
-                statVal.textContent = (current + 420).toLocaleString();
-            }
-        },
-        '2077': () => {
-            triggerFlash('#ff0055');
-            consolePrint('> WELCOME TO NIGHT CITY // CHROMED_UP');
-            consolePrint('> ВСЕ СИСТЕМЫ НА МАКСИМУМ');
-            document.body.style.boxShadow = 'inset 0 0 200px rgba(252,238,10,0.3)';
-            setTimeout(() => { document.body.style.boxShadow = ''; }, 3000);
-        },
-        'samozvanets': () => {
-            triggerFlash('#ff0055');
-            consolePrint('> САМОЗВАНЕЦ ОБНАРУЖЕН. ЗАПУСК ПРОТОКОЛА...', '#ff0055');
-            const allText = document.querySelectorAll('*');
-            const savedTexts = [];
-            allText.forEach(el => {
-                if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
-                    savedTexts.push({ el, text: el.textContent });
-                    el.textContent = 'САМОЗВАНЕЦ';
-                    el.style.color = '#ff0055';
-                }
-            });
-            setTimeout(() => {
-                savedTexts.forEach(({ el, text }) => {
-                    el.textContent = text;
-                    el.style.color = '';
-                });
-            }, 3000);
-        },
-        'ryabchuk': () => {
-            consolePrint(asciiLogo, '#fcee0a');
-            consolePrint('> RYABCHUK_DEV // FOUNDER_IDENTIFIED', '#00f0ff');
-            consolePrint('> VK: vk.ru/ryabchukdev');
-            consolePrint('> TG: @RyabchukDev');
-            consolePrint('> MAX: КАНАЛ АКТИВЕН');
-        },
+        contact: () => { cPrint('> TG: @RyabchukDev | VK: vk.ru/ryabchukdev | MAX: канал активен',
+            '#fcee0a'); },
+        vk: () => { cPrint('> VK'); setTimeout(() => window.open('https://vk.ru/ryabchukdev', '_blank'),
+            400); },
+        tg: () => { cPrint('> TG'); setTimeout(() => window.open('https://t.me/RyabchukDev', '_blank'),
+            400); },
+        max: () => { cPrint('> MAX'); setTimeout(() => window.open(
+                'https://max.ru/join/mAnn8OTESdVlfULwjt596BULjTsAcSmNQkf6Iv3zLAI', '_blank'), 400); },
+        appads: () => { cPrint('> APP-ADS.TXT'); setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/app-ads.txt', '_blank'),
+            400); },
+        ads: () => { cPrint('> ADS.TXT'); setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/ads.txt', '_blank'), 400); },
+        privacy: () => { cPrint('> ПОЛИТИКА'); setTimeout(() => window.open(
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/blob/main/Политика%20кондефициальности',
+                '_blank'), 400); },
+        whoami: () => { cPrint('> ROOT // RYABCHUK_DEV // AUTHORIZED'); },
+        clear: () => { consoleOutput.innerHTML = ''; },
+        exit: () => toggleConsole(),
+        '420': () => { flash();
+            cPrint('> PROTOCOL_420: BREACH', '#fcee0a'); const s = document.getElementById(
+                'statDownloads'); if (s) s.textContent = (parseInt(s.textContent.replace(/\s/g, '')) +
+                420).toLocaleString(); },
+        '2077': () => { flash('#ff0055');
+            cPrint('> NIGHT CITY // WELCOME');
+            document.body.style.boxShadow = 'inset 0 0 200px rgba(252,238,10,0.2)';
+            setTimeout(() => document.body.style.boxShadow = '', 3000); },
+        samozvanets: () => { flash('#ff0055');
+            cPrint('> САМОЗВАНЕЦ ОБНАРУЖЕН', '#ff0055'); },
+        ryabchuk: () => { cPrint(ascii, '#fcee0a');
+            cPrint('> FOUNDER IDENTIFIED', '#00f0ff'); },
     };
 
-    consoleInput.addEventListener('keydown', (e) => {
+    consoleInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
-            const input = consoleInput.value.trim().toLowerCase();
-            consolePrint(`guest@ryabchuk:~$ ${input}`, '#888');
-            if (commands[input]) {
-                commands[input]();
-            } else if (input !== '') {
-                consolePrint(`> КОМАНДА НЕ РАСПОЗНАНА: ${input}`, '#ff0055');
-                consolePrint('> Введите "help" для списка команд', '#888');
-            }
+            const v = consoleInput.value.trim().toLowerCase();
+            cPrint(`root@ryabchuk:~# ${v}`, '#555');
+            if (cmds[v]) cmds[v]();
+            else if (v) { cPrint(`> НЕИЗВЕСТНАЯ КОМАНДА: ${v}`, '#ff0055');
+                cPrint('> Введите help', '#888'); }
             consoleInput.value = '';
         }
-        if (e.key === 'Escape') {
-            toggleConsole();
-        }
+        if (e.key === 'Escape') toggleConsole();
     });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === '`' || e.key === '~') {
-            e.preventDefault();
-            toggleConsole();
-        }
-    });
+    document.addEventListener('keydown', e => { if (e.key === '`' || e.key === '~') { e.preventDefault();
+            toggleConsole(); } });
 
     // ============================================
-    // ОБНОВЛЕНИЕ СЧЁТЧИКОВ
+    // СЧЁТЧИКИ
     // ============================================
     setInterval(() => {
-        const downloads = document.getElementById('statDownloads');
-        const subs = document.getElementById('statSubs');
-        const uptime = document.getElementById('statUptime');
-        if (downloads) {
-            const d = parseInt(downloads.textContent.replace(/\s/g, '')) || 0;
-            downloads.textContent = (d + Math.floor(Math.random() * 3)).toLocaleString();
-        }
-        if (subs) {
-            const s = parseInt(subs.textContent.replace(/\s/g, '')) || 0;
-            subs.textContent = (s + Math.floor(Math.random() * 2)).toLocaleString();
-        }
-        if (uptime) {
-            const u = parseInt(uptime.textContent.replace(/\D/g, '')) || 0;
-            uptime.textContent = (u + 1) + 'h';
-        }
+        const d = document.getElementById('statDownloads');
+        const s = document.getElementById('statSubs');
+        const u = document.getElementById('statUptime');
+        if (d) d.textContent = (parseInt(d.textContent.replace(/\s/g, '')) + Math.floor(Math.random() *
+            3)).toLocaleString();
+        if (s) s.textContent = (parseInt(s.textContent.replace(/\s/g, '')) + Math.floor(Math.random() *
+            2)).toLocaleString();
+        if (u) u.textContent = (parseInt(u.textContent.replace(/\D/g, '')) + 1) + 'h';
     }, 10000);
 
-    // ============================================
-    // ИНИЦИАЛИЗАЦИЯ
-    // ============================================
-    console.log('%c RYABCHUK_DEV %c SYSTEM_CORE v2.0 %c ONLINE ',
-        'background:#fcee0a;color:#000;padding:8px;font-weight:bold;font-size:1.2em;',
-        'background:#00f0ff;color:#000;padding:8px;',
-        'background:#00ff41;color:#000;padding:8px;');
-    console.log('%c Все ссылки встроены: VK | TG | MAX | GitHub APK | Политика ',
-        'color:#fcee0a;font-size:1.1em;');
-    console.log('%c Нажми ~ чтобы открыть консоль %c | %c Попробуй: 420, 2077, samozvanets, ryabchuk, vk, tg, max,
-        privacy ',
-        'color:#fcee0a;', '', 'color:#ff0055;');
+    console.log('%c RYABCHUK_DEV v3.0 %c ALL SYSTEMS ONLINE %c ~ КОНСОЛЬ',
+        'background:#fcee0a;color:#000;padding:6px;font-weight:bold;',
+        'background:#00f0ff;color:#000;padding:6px;', 'color:#00ff41;');
 </script>
 </body>
 </html>
