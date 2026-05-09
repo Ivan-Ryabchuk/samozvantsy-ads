@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RYABCHUK_DEV // SYSTEM_CORE v3.0</title>
 
+    <!-- Yandex.RTB -->
+    <script>window.yaContextCb=window.yaContextCb||[]</script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
     </script>
 
@@ -426,6 +430,10 @@
             background: rgba(252, 238, 10, 0.02);
             text-align: center;
             position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .ad-section::before {
             content: 'AD BLOCK';
@@ -441,17 +449,6 @@
             color: var(--neon-yellow);
             border: 1px solid rgba(252, 238, 10, 0.3);
             border-radius: 2px;
-        }
-        .ad-inner {
-            color: #555;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 8px;
         }
 
         /* ============================================
@@ -742,19 +739,24 @@ target="_blank" class="btn-main btn-policy">
 </a>
 </div>
 
-<!-- Рекламный блок -->
+<!-- Рекламный блок Яндекс -->
 <div class="ad-section">
-    <div class="ad-inner">
-        <!-- СЮДА ВСТАВИТЬ КОД РСЯ -->
-        <span style="color:#444;">&lt;!-- Yandex.RTB R-A-XXXXX-X --&gt;</span>
-        <span style="color:#444;">&lt;div id="yandex_rtb"&gt;&lt;/div&gt;</span>
-    </div>
+    <!-- Yandex.RTB R-A-19250727-1 -->
+    <div id="yandex_rtb_R-A-19250727-1"></div>
+    <script>
+        window.yaContextCb.push(() => {
+            Ya.Context.AdvManager.render({
+                "blockId": "R-A-19250727-1",
+                "renderTo": "yandex_rtb_R-A-19250727-1"
+            })
+        })
+    </script>
 </div>
 
 <!-- Бегущая строка -->
 <div class="ticker-wrap">
     <div class="ticker-text">
-        > APK v1.0 НА GITHUB // > TG: @RyabchukDev // > VK: vk.ru/ryabchukdev //
+        > APK v2.0.0 НА GITHUB // > TG: @RyabchukDev // > VK: vk.ru/ryabchukdev //
         > MAX: КАНАЛ АКТИВЕН // > APP-ADS.TXT ЗАГРУЖЕН // > ADS.TXT ЗАГРУЖЕН //
         > ПОЛИТИКА ДОСТУПНА // > НАШИ ИГРЫ: СКОРО // > НАЖМИ ~ ДЛЯ КОНСОЛИ
     </div>
@@ -917,9 +919,9 @@ target="_blank" class="btn-main btn-policy">
         status: () => cPrint('> SYSTEM: ONLINE // ALL NODES ACTIVE'),
         games: () => cPrint('> НАШИ ИГРЫ: СКОРО БУДЕТ ПОЛНЫЙ КАТАЛОГ // STAY TUNED', '#ff6600'),
         download: () => {
-            cPrint('> GITHUB APK v1.0', '#fcee0a');
+            cPrint('> GITHUB APK v2.0.0', '#fcee0a');
             setTimeout(() => window.open(
-                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v1.0', '_blank'), 400);
+                'https://github.com/Ivan-Ryabchuk/samozvantsy-ads/releases/tag/v2.0.0', '_blank'), 400);
         },
         contact: () => cPrint('> TG: @RyabchukDev | VK: vk.ru/ryabchukdev | MAX: канал активен', '#fcee0a'),
         vk: () => { cPrint('> VK'); setTimeout(() => window.open('https://vk.ru/ryabchukdev', '_blank'), 400); },
